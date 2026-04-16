@@ -1,0 +1,1030 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>☕ Minicoy Cafe</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --cream: #F5F0E8;
+            --espresso: #2C1810;
+            --caramel: #C8860A;
+            --latte: #D4A96A;
+            --foam: #FBF7F0;
+            --dark: #1A0F0A;
+            --success: #4A7C59;
+            --error: #C0392B;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--cream);
+            color: var(--espresso);
+            min-height: 100vh;
+        }
+
+        /* ── HEADER ── */
+        header {
+            background: var(--espresso);
+            padding: 20px 40px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 4px 20px rgba(44,24,16,0.3);
+        }
+
+        .logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 28px;
+            color: var(--latte);
+            letter-spacing: 1px;
+        }
+
+        .logo span { color: var(--caramel); }
+
+        nav { display: flex; gap: 8px; }
+
+        nav button {
+            background: transparent;
+            border: 1px solid rgba(212,169,106,0.3);
+            color: var(--latte);
+            padding: 8px 20px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        nav button:hover,
+        nav button.active {
+            background: var(--caramel);
+            border-color: var(--caramel);
+            color: white;
+        }
+
+        /* ── PAGES ── */
+        .page { display: none; padding: 40px; max-width: 1200px; margin: 0 auto; }
+        .page.active { display: block; animation: fadeIn 0.4s ease; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .page-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 36px;
+            color: var(--espresso);
+            margin-bottom: 8px;
+        }
+
+        .page-subtitle {
+            color: var(--caramel);
+            font-size: 14px;
+            margin-bottom: 32px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        /* ── MENU PAGE ── */
+        .category-filter {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            background: white;
+            border: 2px solid var(--latte);
+            color: var(--espresso);
+            padding: 8px 20px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        .filter-btn:hover,
+        .filter-btn.active {
+            background: var(--espresso);
+            border-color: var(--espresso);
+            color: var(--latte);
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 24px;
+        }
+
+        .product-card {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 2px 12px rgba(44,24,16,0.08);
+            transition: all 0.3s;
+            border: 1px solid rgba(212,169,106,0.15);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .product-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--caramel), var(--latte));
+        }
+
+        .product-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 30px rgba(44,24,16,0.15);
+        }
+
+        .product-emoji {
+            font-size: 40px;
+            margin-bottom: 12px;
+            display: block;
+        }
+
+        .product-name {
+            font-family: 'Playfair Display', serif;
+            font-size: 18px;
+            margin-bottom: 6px;
+        }
+
+        .product-desc {
+            font-size: 13px;
+            color: #888;
+            margin-bottom: 16px;
+            line-height: 1.5;
+        }
+
+        .product-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .product-price {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--caramel);
+        }
+
+        .add-to-order-btn {
+            background: var(--espresso);
+            color: var(--latte);
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 13px;
+            transition: all 0.3s;
+        }
+
+        .add-to-order-btn:hover {
+            background: var(--caramel);
+            color: white;
+        }
+
+        .category-badge {
+            display: inline-block;
+            background: var(--foam);
+            color: var(--caramel);
+            font-size: 11px;
+            padding: 3px 10px;
+            border-radius: 50px;
+            margin-bottom: 8px;
+            border: 1px solid var(--latte);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* ── ORDER PAGE ── */
+        .order-layout {
+            display: grid;
+            grid-template-columns: 1fr 380px;
+            gap: 32px;
+            align-items: start;
+        }
+
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 22px;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--latte);
+        }
+
+        .order-products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 16px;
+        }
+
+        .order-product-card {
+            background: white;
+            border-radius: 12px;
+            padding: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+            box-shadow: 0 2px 8px rgba(44,24,16,0.06);
+        }
+
+        .order-product-card:hover {
+            border-color: var(--caramel);
+            transform: translateY(-2px);
+        }
+
+        .order-product-card .name {
+            font-weight: 600;
+            font-size: 14px;
+            margin-bottom: 4px;
+        }
+
+        .order-product-card .price {
+            color: var(--caramel);
+            font-weight: 700;
+        }
+
+        /* ── CART ── */
+        .cart-panel {
+            background: var(--espresso);
+            border-radius: 20px;
+            padding: 28px;
+            color: var(--foam);
+            position: sticky;
+            top: 100px;
+        }
+
+        .cart-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 22px;
+            color: var(--latte);
+            margin-bottom: 20px;
+        }
+
+        .customer-input {
+            width: 100%;
+            padding: 12px 16px;
+            border-radius: 10px;
+            border: 1px solid rgba(212,169,106,0.3);
+            background: rgba(255,255,255,0.08);
+            color: white;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 14px;
+            margin-bottom: 20px;
+            outline: none;
+        }
+
+        .customer-input::placeholder { color: rgba(212,169,106,0.5); }
+        .customer-input:focus { border-color: var(--caramel); }
+
+        .cart-items { margin-bottom: 20px; min-height: 100px; }
+
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(212,169,106,0.15);
+        }
+
+        .cart-item-name { font-size: 14px; color: var(--foam); }
+        .cart-item-price { color: var(--caramel); font-weight: 700; }
+
+        .cart-item-qty {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .qty-btn {
+            background: rgba(212,169,106,0.2);
+            border: none;
+            color: var(--latte);
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .qty-btn:hover { background: var(--caramel); color: white; }
+
+        .cart-empty {
+            text-align: center;
+            color: rgba(212,169,106,0.4);
+            font-size: 14px;
+            padding: 20px 0;
+        }
+
+        .cart-total {
+            display: flex;
+            justify-content: space-between;
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--latte);
+            padding: 16px 0;
+            border-top: 1px solid rgba(212,169,106,0.3);
+            margin-bottom: 16px;
+        }
+
+        .place-order-btn {
+            width: 100%;
+            background: var(--caramel);
+            color: white;
+            border: none;
+            padding: 16px;
+            border-radius: 12px;
+            font-family: 'Playfair Display', serif;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+            letter-spacing: 1px;
+        }
+
+        .place-order-btn:hover {
+            background: var(--latte);
+            transform: translateY(-2px);
+        }
+
+        /* ── ORDERS PAGE ── */
+        .orders-list { display: flex; flex-direction: column; gap: 16px; }
+
+        .order-card {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 2px 12px rgba(44,24,16,0.08);
+            border-left: 5px solid var(--caramel);
+            transition: all 0.3s;
+        }
+
+        .order-card:hover { transform: translateX(4px); }
+
+        .order-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .order-customer {
+            font-family: 'Playfair Display', serif;
+            font-size: 20px;
+        }
+
+        .order-total {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--caramel);
+        }
+
+        .order-date {
+            font-size: 13px;
+            color: #999;
+            margin-bottom: 8px;
+        }
+
+        .order-id {
+            display: inline-block;
+            background: var(--foam);
+            color: var(--caramel);
+            font-size: 12px;
+            padding: 3px 10px;
+            border-radius: 50px;
+            border: 1px solid var(--latte);
+        }
+
+        /* ── ADMIN PAGE ── */
+        .admin-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .admin-card {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 2px 12px rgba(44,24,16,0.08);
+        }
+
+        .admin-card .product-name {
+            font-family: 'Playfair Display', serif;
+            font-size: 18px;
+            margin-bottom: 4px;
+        }
+
+        .current-price {
+            color: var(--caramel);
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        .price-input-row {
+            display: flex;
+            gap: 10px;
+        }
+
+        .price-input {
+            flex: 1;
+            padding: 10px 14px;
+            border: 2px solid var(--latte);
+            border-radius: 8px;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        .price-input:focus { border-color: var(--caramel); }
+
+        .update-btn {
+            background: var(--espresso);
+            color: var(--latte);
+            border: none;
+            padding: 10px 18px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 13px;
+            transition: all 0.3s;
+            white-space: nowrap;
+        }
+
+        .update-btn:hover {
+            background: var(--caramel);
+            color: white;
+        }
+
+        /* ── TOAST ── */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: var(--espresso);
+            color: var(--latte);
+            padding: 16px 24px;
+            border-radius: 12px;
+            font-size: 14px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 1000;
+            border-left: 4px solid var(--caramel);
+        }
+
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        /* ── LOADING ── */
+        .loading {
+            text-align: center;
+            padding: 60px;
+            color: var(--caramel);
+            font-size: 16px;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid var(--latte);
+            border-top-color: var(--caramel);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin: 0 auto 16px;
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* ── REFRESH BTN ── */
+        .refresh-btn {
+            background: var(--espresso);
+            color: var(--latte);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-bottom: 24px;
+            transition: all 0.3s;
+        }
+
+        .refresh-btn:hover { background: var(--caramel); color: white; }
+    </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+    <div class="logo">☕ Minicoy <span>Cafe</span></div>
+    <nav>
+        <button class="active" onclick="showPage('menu')">Menu</button>
+        <button onclick="showPage('order')">Place Order</button>
+        <button onclick="showPage('orders')">All Orders</button>
+        <button onclick="showPage('admin')">Admin</button>
+    </nav>
+</header>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- PAGE 1: MENU -->
+<!-- ══════════════════════════════════════ -->
+<div class="page active" id="page-menu">
+    <h1 class="page-title">Our Menu</h1>
+    <p class="page-subtitle">Fresh · Handcrafted · Delicious</p>
+
+    <div class="category-filter" id="category-filter">
+        <button class="filter-btn active" onclick="filterProducts('all', this)">All</button>
+    </div>
+
+    <div id="menu-loading" class="loading">
+        <div class="spinner"></div>
+        Brewing your menu...
+    </div>
+
+    <div class="products-grid" id="products-grid"></div>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- PAGE 2: PLACE ORDER -->
+<!-- ══════════════════════════════════════ -->
+<div class="page" id="page-order">
+    <h1 class="page-title">Place Order</h1>
+    <p class="page-subtitle">Click items to add to your order</p>
+
+    <div class="order-layout">
+        <!-- Left: Products -->
+        <div>
+            <div class="category-filter" id="order-category-filter">
+                <button class="filter-btn active" onclick="filterOrderProducts('all', this)">All</button>
+            </div>
+            <div class="order-products-grid" id="order-products-grid"></div>
+        </div>
+
+        <!-- Right: Cart -->
+        <div class="cart-panel">
+            <div class="cart-title">🛒 Your Order</div>
+            <input
+                    type="text"
+                    class="customer-input"
+                    id="customer-name"
+                    placeholder="Your name...">
+
+            <div class="cart-items" id="cart-items">
+                <div class="cart-empty">No items yet.<br>Click products to add!</div>
+            </div>
+
+            <div class="cart-total">
+                <span>Total</span>
+                <span id="cart-total">$0.00</span>
+            </div>
+
+            <button class="place-order-btn" onclick="placeOrder()">
+                Place Order ☕
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- PAGE 3: ALL ORDERS -->
+<!-- ══════════════════════════════════════ -->
+<div class="page" id="page-orders">
+    <h1 class="page-title">All Orders</h1>
+    <p class="page-subtitle">Every cup tells a story</p>
+
+    <button class="refresh-btn" onclick="loadOrders()">↻ Refresh Orders</button>
+
+    <div id="orders-loading" class="loading" style="display:none">
+        <div class="spinner"></div>
+        Loading orders...
+    </div>
+
+    <div class="orders-list" id="orders-list"></div>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- PAGE 4: ADMIN -->
+<!-- ══════════════════════════════════════ -->
+<div class="page" id="page-admin">
+    <h1 class="page-title">Admin Panel</h1>
+    <p class="page-subtitle">Manage product prices</p>
+
+    <div id="admin-loading" class="loading" style="display:none">
+        <div class="spinner"></div>
+        Loading products...
+    </div>
+
+    <div class="admin-grid" id="admin-grid"></div>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- JAVASCRIPT -->
+<!-- ══════════════════════════════════════ -->
+<script>
+    const API = 'http://localhost:8081';
+
+    // ── STATE ──
+    let allProducts = [];
+    let allCategories = [];
+    let cart = []; // [{product, quantity}]
+
+    // ── EMOJI MAP ──
+    const emojiMap = {
+        'Hot Beverages':  '☕',
+        'Cold Beverages': '🧋',
+        'Snacks':         '🥐',
+        'Desserts':       '🍰',
+    };
+
+    function getEmoji(categoryName) {
+        return emojiMap[categoryName] || '🍽️';
+    }
+
+    // ── PAGE NAVIGATION ──
+    function showPage(page) {
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+        document.getElementById('page-' + page).classList.add('active');
+        event.target.classList.add('active');
+
+        if (page === 'orders') loadOrders();
+        if (page === 'admin') loadAdmin();
+        if (page === 'order') renderOrderProducts();
+    }
+
+    // ── TOAST ──
+    function showToast(msg) {
+        const t = document.getElementById('toast');
+        t.textContent = msg;
+        t.classList.add('show');
+        setTimeout(() => t.classList.remove('show'), 3000);
+    }
+
+    // ══════════════════════════
+    // MENU PAGE
+    // ══════════════════════════
+    async function loadMenu() {
+        try {
+            const [products, categories] = await Promise.all([
+                fetch(`${API}/api/products`).then(r => r.json()),
+                fetch(`${API}/api/categories`).then(r => r.json())
+            ]);
+
+            allProducts = products;
+            allCategories = categories;
+
+            // build category filter buttons
+            const filterDiv = document.getElementById('category-filter');
+            categories.forEach(cat => {
+                const btn = document.createElement('button');
+                btn.className = 'filter-btn';
+                btn.textContent = getEmoji(cat.name) + ' ' + cat.name;
+                btn.onclick = function() { filterProducts(cat.id, this); };
+                filterDiv.appendChild(btn);
+            });
+
+            // build order category filter too
+            const orderFilterDiv = document.getElementById('order-category-filter');
+            categories.forEach(cat => {
+                const btn = document.createElement('button');
+                btn.className = 'filter-btn';
+                btn.textContent = getEmoji(cat.name) + ' ' + cat.name;
+                btn.onclick = function() { filterOrderProducts(cat.id, this); };
+                orderFilterDiv.appendChild(btn);
+            });
+
+            document.getElementById('menu-loading').style.display = 'none';
+            renderMenuProducts(allProducts);
+
+        } catch(e) {
+            document.getElementById('menu-loading').innerHTML =
+                '❌ Could not connect to server. Is your app running on port 8081?';
+        }
+    }
+
+    function renderMenuProducts(products) {
+        const grid = document.getElementById('products-grid');
+        grid.innerHTML = '';
+
+        products.forEach(p => {
+            const emoji = getEmoji(p.category?.name);
+            const card = document.createElement('div');
+            card.className = 'product-card';
+            card.innerHTML = `
+                <span class="product-emoji">${emoji}</span>
+                <div class="category-badge">${p.category?.name || 'Uncategorized'}</div>
+                <div class="product-name">${p.name}</div>
+                <div class="product-desc">${p.description}</div>
+                <div class="product-footer">
+                    <div class="product-price">$${p.price.toFixed(2)}</div>
+                    <button class="add-to-order-btn"
+                        onclick="addToCart(${p.id}, '${p.name}', ${p.price})">
+                        + Add
+                    </button>
+                </div>
+            `;
+            grid.appendChild(card);
+        });
+    }
+
+    function filterProducts(categoryId, btn) {
+        document.querySelectorAll('#category-filter .filter-btn')
+            .forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+
+        if (categoryId === 'all') {
+            renderMenuProducts(allProducts);
+        } else {
+            renderMenuProducts(
+                allProducts.filter(p => p.category?.id === categoryId)
+            );
+        }
+    }
+
+    // ══════════════════════════
+    // ORDER PAGE
+    // ══════════════════════════
+    function renderOrderProducts(filteredProducts = null) {
+        const products = filteredProducts || allProducts;
+        const grid = document.getElementById('order-products-grid');
+        grid.innerHTML = '';
+
+        products.forEach(p => {
+            const emoji = getEmoji(p.category?.name);
+            const card = document.createElement('div');
+            card.className = 'order-product-card';
+            card.innerHTML = `
+                <div style="font-size:28px;margin-bottom:8px">${emoji}</div>
+                <div class="name">${p.name}</div>
+                <div class="price">$${p.price.toFixed(2)}</div>
+            `;
+            card.onclick = () => addToCart(p.id, p.name, p.price);
+            grid.appendChild(card);
+        });
+    }
+
+    function filterOrderProducts(categoryId, btn) {
+        document.querySelectorAll('#order-category-filter .filter-btn')
+            .forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+
+        if (categoryId === 'all') {
+            renderOrderProducts(allProducts);
+        } else {
+            renderOrderProducts(
+                allProducts.filter(p => p.category?.id === categoryId)
+            );
+        }
+    }
+
+    // ── CART ──
+    function addToCart(productId, name, price) {
+        const existing = cart.find(i => i.productId === productId);
+        if (existing) {
+            existing.quantity++;
+        } else {
+            cart.push({ productId, name, price, quantity: 1 });
+        }
+        renderCart();
+        showToast(`✅ Added ${name} to order!`);
+    }
+
+    function changeQty(productId, delta) {
+        const item = cart.find(i => i.productId === productId);
+        if (!item) return;
+        item.quantity += delta;
+        if (item.quantity <= 0) {
+            cart = cart.filter(i => i.productId !== productId);
+        }
+        renderCart();
+    }
+
+    function renderCart() {
+        const container = document.getElementById('cart-items');
+        const totalEl = document.getElementById('cart-total');
+
+        if (cart.length === 0) {
+            container.innerHTML = '<div class="cart-empty">No items yet.<br>Click products to add!</div>';
+            totalEl.textContent = '$0.00';
+            return;
+        }
+
+        let total = 0;
+        container.innerHTML = '';
+
+        cart.forEach(item => {
+            total += item.price * item.quantity;
+            const div = document.createElement('div');
+            div.className = 'cart-item';
+            div.innerHTML = `
+                <div>
+                    <div class="cart-item-name">${item.name}</div>
+                    <div class="cart-item-price">
+                        $${(item.price * item.quantity).toFixed(2)}
+                    </div>
+                </div>
+                <div class="cart-item-qty">
+                    <button class="qty-btn"
+                        onclick="changeQty(${item.productId}, -1)">−</button>
+                    <span style="color:white;font-size:14px">${item.quantity}</span>
+                    <button class="qty-btn"
+                        onclick="changeQty(${item.productId}, 1)">+</button>
+                </div>
+            `;
+            container.appendChild(div);
+        });
+
+        totalEl.textContent = '$' + total.toFixed(2);
+    }
+
+    async function placeOrder() {
+        const customerName = document.getElementById('customer-name').value.trim();
+
+        if (!customerName) {
+            showToast('⚠️ Please enter your name!');
+            return;
+        }
+        if (cart.length === 0) {
+            showToast('⚠️ Your cart is empty!');
+            return;
+        }
+
+        const items = cart.map(i => ({
+            product: { id: i.productId },
+            quantity: i.quantity,
+            price: i.price
+        }));
+
+        try {
+            const response = await fetch(
+                `${API}/api/orders/place?customerName=${encodeURIComponent(customerName)}`,
+                {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(items)
+                }
+            );
+
+            const order = await response.json();
+            cart = [];
+            renderCart();
+            document.getElementById('customer-name').value = '';
+            showToast(`🎉 Order placed! Total: $${order.totalAmount.toFixed(2)}`);
+
+        } catch(e) {
+            showToast('❌ Failed to place order. Try again!');
+        }
+    }
+
+    // ══════════════════════════
+    // ORDERS PAGE
+    // ══════════════════════════
+    async function loadOrders() {
+        const loading = document.getElementById('orders-loading');
+        const list = document.getElementById('orders-list');
+        loading.style.display = 'block';
+        list.innerHTML = '';
+
+        try {
+            const orders = await fetch(`${API}/api/orders`).then(r => r.json());
+            loading.style.display = 'none';
+
+            if (orders.length === 0) {
+                list.innerHTML = '<div class="loading">No orders yet. Place your first order!</div>';
+                return;
+            }
+
+            orders.reverse().forEach(order => {
+                const date = new Date(order.orderDate).toLocaleString();
+                const card = document.createElement('div');
+                card.className = 'order-card';
+                card.innerHTML = `
+                    <div class="order-header">
+                        <div class="order-customer">☕ ${order.customerName}</div>
+                        <div class="order-total">$${order.totalAmount.toFixed(2)}</div>
+                    </div>
+                    <div class="order-date">📅 ${date}</div>
+                    <div class="order-id">Order #${order.id}</div>
+                `;
+                list.appendChild(card);
+            });
+
+        } catch(e) {
+            loading.style.display = 'none';
+            list.innerHTML = '<div class="loading">❌ Could not load orders.</div>';
+        }
+    }
+
+    // ══════════════════════════
+    // ADMIN PAGE
+    // ══════════════════════════
+    async function loadAdmin() {
+        const loading = document.getElementById('admin-loading');
+        const grid = document.getElementById('admin-grid');
+        loading.style.display = 'block';
+        grid.innerHTML = '';
+
+        try {
+            const products = await fetch(`${API}/api/products`).then(r => r.json());
+            loading.style.display = 'none';
+
+            products.forEach(p => {
+                const card = document.createElement('div');
+                card.className = 'admin-card';
+                card.innerHTML = `
+                    <div class="product-name">
+                        ${getEmoji(p.category?.name)} ${p.name}
+                    </div>
+                    <div class="category-badge">${p.category?.name}</div>
+                    <div class="current-price" id="price-display-${p.id}">
+                        $${p.price.toFixed(2)}
+                    </div>
+                    <div class="price-input-row">
+                        <input
+                            type="number"
+                            class="price-input"
+                            id="price-input-${p.id}"
+                            placeholder="New price"
+                            step="0.50"
+                            min="0">
+                        <button class="update-btn"
+                            onclick="updatePrice(${p.id}, '${p.name}',
+                                '${p.description}', ${p.category?.id})">
+                            Update
+                        </button>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+
+        } catch(e) {
+            loading.style.display = 'none';
+            grid.innerHTML = '<div class="loading">❌ Could not load products.</div>';
+        }
+    }
+
+    async function updatePrice(id, name, description, categoryId) {
+        const input = document.getElementById(`price-input-${id}`);
+        const newPrice = parseFloat(input.value);
+
+        if (!newPrice || newPrice <= 0) {
+            showToast('⚠️ Enter a valid price!');
+            return;
+        }
+
+        try {
+            const response = await fetch(`${API}/api/products/${id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    name: name,
+                    price: newPrice,
+                    description: description,
+                    category: { id: categoryId }
+                })
+            });
+
+            const updated = await response.json();
+            document.getElementById(`price-display-${id}`).textContent =
+                '$' + updated.price.toFixed(2);
+            input.value = '';
+
+            // refresh allProducts too
+            const idx = allProducts.findIndex(p => p.id === id);
+            if (idx !== -1) allProducts[idx].price = updated.price;
+
+            showToast(`✅ ${name} price updated to $${updated.price.toFixed(2)}!`);
+
+        } catch(e) {
+            showToast('❌ Failed to update price!');
+        }
+    }
+
+    // ── INIT ──
+    loadMenu();
+</script>
+</body>
+</html>

@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-@RestController // Tells Spring: "I am a web endpoint that returns JSON"
-@RequestMapping("/api/products") // The base URL for all methods in this class
+//@RestController // Tells Spring: "I am a web endpoint that returns JSON"
+//@RequestMapping("/api/products") // The base URL for all methods in this class
 public class ProductController_CLI {
 
     @Autowired // "Dependency Injection" - Spring automatically plugs in the Repository

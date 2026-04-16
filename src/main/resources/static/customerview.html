@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>☕ Minicoy Cafe</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --cream: #F5F0E8;
+            --espresso: #2C1810;
+            --caramel: #C8860A;
+            --latte: #D4A96A;
+            --foam: #FBF7F0;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--cream);
+            color: var(--espresso);
+            min-height: 100vh;
+        }
+
+        /* ── HEADER ── */
+        header {
+            background: var(--espresso);
+            padding: 20px 40px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 4px 20px rgba(44,24,16,0.3);
+        }
+
+        .logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 28px;
+            color: var(--latte);
+        }
+
+        .logo span { color: var(--caramel); }
+
+        .welcome-tag {
+            color: rgba(212,169,106,0.6);
+            font-size: 13px;
+            letter-spacing: 1px;
+        }
+
+        nav { display: flex; gap: 8px; }
+
+        nav button {
+            background: transparent;
+            border: 1px solid rgba(212,169,106,0.3);
+            color: var(--latte);
+            padding: 8px 20px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        nav button:hover,
+        nav button.active {
+            background: var(--caramel);
+            border-color: var(--caramel);
+            color: white;
+        }
+
+        /* ── HERO BANNER ── */
+        .hero {
+            background: var(--espresso);
+            color: var(--foam);
+            text-align: center;
+            padding: 60px 40px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '☕';
+            position: absolute;
+            font-size: 300px;
+            opacity: 0.04;
+            top: -60px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .hero h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 52px;
+            color: var(--latte);
+            margin-bottom: 12px;
+        }
+
+        .hero p {
+            color: rgba(212,169,106,0.7);
+            font-size: 16px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+        }
+
+        /* ── PAGES ── */
+        .page { display: none; padding: 40px; max-width: 1200px; margin: 0 auto; }
+        .page.active { display: block; animation: fadeIn 0.4s ease; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .page-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 36px;
+            margin-bottom: 8px;
+        }
+
+        .page-subtitle {
+            color: var(--caramel);
+            font-size: 13px;
+            margin-bottom: 32px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        /* ── CATEGORY FILTER ── */
+        .category-filter {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            background: white;
+            border: 2px solid var(--latte);
+            color: var(--espresso);
+            padding: 8px 20px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        .filter-btn:hover,
+        .filter-btn.active {
+            background: var(--espresso);
+            border-color: var(--espresso);
+            color: var(--latte);
+        }
+
+        /* ── MENU GRID ── */
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 24px;
+        }
+
+        .product-card {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 2px 12px rgba(44,24,16,0.08);
+            transition: all 0.3s;
+            border: 1px solid rgba(212,169,106,0.15);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .product-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--caramel), var(--latte));
+        }
+
+        .product-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 30px rgba(44,24,16,0.15);
+        }
+
+        .product-emoji { font-size: 40px; margin-bottom: 12px; display: block; }
+
+        .category-badge {
+            display: inline-block;
+            background: var(--foam);
+            color: var(--caramel);
+            font-size: 11px;
+            padding: 3px 10px;
+            border-radius: 50px;
+            margin-bottom: 8px;
+            border: 1px solid var(--latte);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .product-name {
+            font-family: 'Playfair Display', serif;
+            font-size: 18px;
+            margin-bottom: 6px;
+        }
+
+        .product-desc {
+            font-size: 13px;
+            color: #888;
+            margin-bottom: 16px;
+            line-height: 1.5;
+        }
+
+        .product-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .product-price {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--caramel);
+        }
+
+        .add-btn {
+            background: var(--espresso);
+            color: var(--latte);
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 13px;
+            transition: all 0.3s;
+        }
+
+        .add-btn:hover { background: var(--caramel); color: white; }
+
+        /* ── ORDER PAGE ── */
+        .order-layout {
+            display: grid;
+            grid-template-columns: 1fr 380px;
+            gap: 32px;
+            align-items: start;
+        }
+
+        .order-products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 16px;
+        }
+
+        .order-product-card {
+            background: white;
+            border-radius: 12px;
+            padding: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+            box-shadow: 0 2px 8px rgba(44,24,16,0.06);
+            text-align: center;
+        }
+
+        .order-product-card:hover { border-color: var(--caramel); transform: translateY(-2px); }
+        .order-product-card .name { font-weight: 600; font-size: 14px; margin-bottom: 4px; }
+        .order-product-card .price { color: var(--caramel); font-weight: 700; }
+
+        /* ── CART ── */
+        .cart-panel {
+            background: var(--espresso);
+            border-radius: 20px;
+            padding: 28px;
+            color: var(--foam);
+            position: sticky;
+            top: 100px;
+        }
+
+        .cart-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 22px;
+            color: var(--latte);
+            margin-bottom: 20px;
+        }
+
+        .customer-input {
+            width: 100%;
+            padding: 12px 16px;
+            border-radius: 10px;
+            border: 1px solid rgba(212,169,106,0.3);
+            background: rgba(255,255,255,0.08);
+            color: white;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 14px;
+            margin-bottom: 20px;
+            outline: none;
+        }
+
+        .customer-input::placeholder { color: rgba(212,169,106,0.5); }
+        .customer-input:focus { border-color: var(--caramel); }
+
+        .cart-items { margin-bottom: 20px; min-height: 80px; }
+
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(212,169,106,0.15);
+        }
+
+        .cart-item-name { font-size: 14px; }
+        .cart-item-price { color: var(--caramel); font-weight: 700; }
+
+        .cart-item-qty { display: flex; align-items: center; gap: 8px; }
+
+        .qty-btn {
+            background: rgba(212,169,106,0.2);
+            border: none;
+            color: var(--latte);
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .qty-btn:hover { background: var(--caramel); color: white; }
+
+        .cart-empty {
+            text-align: center;
+            color: rgba(212,169,106,0.4);
+            font-size: 14px;
+            padding: 20px 0;
+        }
+
+        .cart-total {
+            display: flex;
+            justify-content: space-between;
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--latte);
+            padding: 16px 0;
+            border-top: 1px solid rgba(212,169,106,0.3);
+            margin-bottom: 16px;
+        }
+
+        .place-order-btn {
+            width: 100%;
+            background: var(--caramel);
+            color: white;
+            border: none;
+            padding: 16px;
+            border-radius: 12px;
+            font-family: 'Playfair Display', serif;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+            letter-spacing: 1px;
+        }
+
+        .place-order-btn:hover { background: var(--latte); transform: translateY(-2px); }
+
+        /* ── SUCCESS SCREEN ── */
+        .success-screen {
+            display: none;
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .success-emoji { font-size: 60px; margin-bottom: 16px; }
+
+        .success-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 24px;
+            color: var(--latte);
+            margin-bottom: 8px;
+        }
+
+        .success-amount {
+            font-size: 36px;
+            font-weight: 700;
+            color: var(--caramel);
+            margin-bottom: 16px;
+        }
+
+        .success-msg {
+            color: rgba(212,169,106,0.6);
+            font-size: 14px;
+            margin-bottom: 24px;
+        }
+
+        .new-order-btn {
+            background: var(--caramel);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        .new-order-btn:hover { background: var(--latte); }
+
+        /* ── TOAST ── */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: var(--espresso);
+            color: var(--latte);
+            padding: 16px 24px;
+            border-radius: 12px;
+            font-size: 14px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 1000;
+            border-left: 4px solid var(--caramel);
+        }
+
+        .toast.show { transform: translateY(0); opacity: 1; }
+
+        /* ── LOADING ── */
+        .loading {
+            text-align: center;
+            padding: 60px;
+            color: var(--caramel);
+        }
+
+        .spinner {
+            width: 40px; height: 40px;
+            border: 3px solid var(--latte);
+            border-top-color: var(--caramel);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin: 0 auto 16px;
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* ── FOOTER ── */
+        footer {
+            background: var(--espresso);
+            color: rgba(212,169,106,0.4);
+            text-align: center;
+            padding: 24px;
+            font-size: 13px;
+            margin-top: 60px;
+        }
+    </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+    <div class="logo">☕ Minicoy <span>Cafe</span></div>
+    <nav>
+        <button class="active" onclick="showPage('menu', this)">Menu</button>
+        <button onclick="showPage('order', this)">Order Now</button>
+    </nav>
+    <div class="welcome-tag">Welcome, Guest ✨</div>
+</header>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- PAGE 1: MENU (view only) -->
+<!-- ══════════════════════════════════════ -->
+<div class="page active" id="page-menu">
+
+    <!-- Hero Banner -->
+    <div class="hero">
+        <h1>Good Coffee.<br>Good Vibes.</h1>
+        <p>Handcrafted with love <3 </p>
+    </div>
+
+    <div style="padding: 40px; max-width: 1200px; margin: 0 auto;">
+        <h2 class="page-title">Our Menu</h2>
+        <p class="page-subtitle">Fresh · Seasonal · Delicious</p>
+
+        <div class="category-filter" id="category-filter">
+            <button class="filter-btn active"
+                    onclick="filterMenu('all', this)">All</button>
+        </div>
+
+        <div id="menu-loading" class="loading">
+            <div class="spinner"></div>
+            Brewing your menu...
+        </div>
+
+        <div class="products-grid" id="products-grid"></div>
+    </div>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- PAGE 2: ORDER -->
+<!-- ══════════════════════════════════════ -->
+<div class="page" id="page-order">
+    <h2 class="page-title">Place Your Order</h2>
+    <p class="page-subtitle">Click items to add · Adjust quantities below</p>
+
+    <div class="order-layout">
+
+        <!-- Left: Products -->
+        <div>
+            <div class="category-filter" id="order-filter">
+                <button class="filter-btn active"
+                        onclick="filterOrder('all', this)">All</button>
+            </div>
+            <div class="order-products-grid" id="order-grid"></div>
+        </div>
+
+        <!-- Right: Cart -->
+        <div class="cart-panel">
+
+            <!-- Normal cart view -->
+            <div id="cart-view">
+                <div class="cart-title">🛒 Your Order</div>
+                <input
+                        type="text"
+                        class="customer-input"
+                        id="customer-name"
+                        placeholder="Your name...">
+
+                <div class="cart-items" id="cart-items">
+                    <div class="cart-empty">
+                        No items yet.<br>Click products to add!
+                    </div>
+                </div>
+
+                <div class="cart-total">
+                    <span>Total</span>
+                    <span id="cart-total">$0.00</span>
+                </div>
+
+                <button class="place-order-btn" onclick="placeOrder()">
+                    Place Order ☕
+                </button>
+            </div>
+
+            <!-- Success view (shown after order placed) -->
+            <div class="success-screen" id="success-view">
+                <div class="success-emoji">🎉</div>
+                <div class="success-title">Order Placed!</div>
+                <div class="success-amount" id="success-amount"></div>
+                <div class="success-msg">
+                    Your order is being prepared.<br>
+                    We'll have it ready shortly!
+                </div>
+                <button class="new-order-btn" onclick="resetOrder()">
+                    + New Order
+                </button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+    ☕ Minicoy Cafe · Made with love · All rights reserved 2024
+</footer>
+
+<script>
+    const API = 'http://localhost:8081';
+
+    let allProducts = [];
+    let allCategories = [];
+    let cart = [];
+
+    const emojiMap = {
+        'Hot Beverages':  '☕',
+        'Cold Beverages': '🧋',
+        'Snacks':         '🥐',
+        'Desserts':       '🍰',
+    };
+
+    function getEmoji(cat) { return emojiMap[cat] || '🍽️'; }
+
+    // ── NAVIGATION ──
+    function showPage(page, btn) {
+        document.querySelectorAll('.page')
+            .forEach(p => p.classList.remove('active'));
+        document.querySelectorAll('nav button')
+            .forEach(b => b.classList.remove('active'));
+
+        document.getElementById('page-' + page).classList.add('active');
+        btn.classList.add('active');
+
+        if (page === 'order') renderOrderGrid();
+    }
+
+    // ── TOAST ──
+    function showToast(msg) {
+        const t = document.getElementById('toast');
+        t.textContent = msg;
+        t.classList.add('show');
+        setTimeout(() => t.classList.remove('show'), 3000);
+    }
+
+    // ══════════════════════════
+    // LOAD DATA
+    // ══════════════════════════
+    async function loadData() {
+        try {
+            const [products, categories] = await Promise.all([
+                fetch(`${API}/api/products`).then(r => r.json()),
+                fetch(`${API}/api/categories`).then(r => r.json())
+            ]);
+
+            allProducts = products;
+            allCategories = categories;
+
+            // build filter buttons
+            ['category-filter', 'order-filter'].forEach(filterId => {
+                const div = document.getElementById(filterId);
+                const isMenu = filterId === 'category-filter';
+
+                categories.forEach(cat => {
+                    const btn = document.createElement('button');
+                    btn.className = 'filter-btn';
+                    btn.textContent = getEmoji(cat.name) + ' ' + cat.name;
+                    btn.onclick = function() {
+                        isMenu
+                            ? filterMenu(cat.id, this)
+                            : filterOrder(cat.id, this);
+                    };
+                    div.appendChild(btn);
+                });
+            });
+
+            document.getElementById('menu-loading').style.display = 'none';
+            renderMenuGrid(allProducts);
+
+        } catch(e) {
+            document.getElementById('menu-loading').innerHTML =
+                '❌ Could not connect. Is your app running?';
+        }
+    }
+
+    // ══════════════════════════
+    // MENU PAGE
+    // ══════════════════════════
+    function renderMenuGrid(products) {
+        const grid = document.getElementById('products-grid');
+        grid.innerHTML = '';
+
+        products.forEach(p => {
+            const emoji = getEmoji(p.category?.name);
+            const card = document.createElement('div');
+            card.className = 'product-card';
+            card.innerHTML = `
+                <span class="product-emoji">${emoji}</span>
+                <div class="category-badge">${p.category?.name}</div>
+                <div class="product-name">${p.name}</div>
+                <div class="product-desc">${p.description}</div>
+                <div class="product-footer">
+                    <div class="product-price">$${p.price.toFixed(2)}</div>
+                    <button class="add-btn"
+                        onclick="goToOrder(${p.id}, '${p.name}', ${p.price})">
+                        Order →
+                    </button>
+                </div>
+            `;
+            grid.appendChild(card);
+        });
+    }
+
+    function filterMenu(categoryId, btn) {
+        document.querySelectorAll('#category-filter .filter-btn')
+            .forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+
+        renderMenuGrid(categoryId === 'all'
+            ? allProducts
+            : allProducts.filter(p => p.category?.id === categoryId));
+    }
+
+    // ── Click Order from Menu ──
+    function goToOrder(id, name, price) {
+        // switch to order page
+        document.querySelectorAll('.page')
+            .forEach(p => p.classList.remove('active'));
+        document.querySelectorAll('nav button')
+            .forEach(b => b.classList.remove('active'));
+
+        document.getElementById('page-order').classList.add('active');
+        document.querySelectorAll('nav button')[1].classList.add('active');
+
+        renderOrderGrid();
+        addToCart(id, name, price);
+    }
+
+    // ══════════════════════════
+    // ORDER PAGE
+    // ══════════════════════════
+    function renderOrderGrid(filtered = null) {
+        const products = filtered || allProducts;
+        const grid = document.getElementById('order-grid');
+        grid.innerHTML = '';
+
+        products.forEach(p => {
+            const card = document.createElement('div');
+            card.className = 'order-product-card';
+            card.innerHTML = `
+                <div style="font-size:28px;margin-bottom:8px">
+                    ${getEmoji(p.category?.name)}
+                </div>
+                <div class="name">${p.name}</div>
+                <div class="price">$${p.price.toFixed(2)}</div>
+            `;
+            card.onclick = () => addToCart(p.id, p.name, p.price);
+            grid.appendChild(card);
+        });
+    }
+
+    function filterOrder(categoryId, btn) {
+        document.querySelectorAll('#order-filter .filter-btn')
+            .forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+
+        renderOrderGrid(categoryId === 'all'
+            ? allProducts
+            : allProducts.filter(p => p.category?.id === categoryId));
+    }
+
+    // ── CART ──
+    function addToCart(productId, name, price) {
+        const existing = cart.find(i => i.productId === productId);
+        if (existing) {
+            existing.quantity++;
+        } else {
+            cart.push({ productId, name, price, quantity: 1 });
+        }
+        renderCart();
+        showToast(`✅ ${name} added!`);
+    }
+
+    function changeQty(productId, delta) {
+        const item = cart.find(i => i.productId === productId);
+        if (!item) return;
+        item.quantity += delta;
+        if (item.quantity <= 0) {
+            cart = cart.filter(i => i.productId !== productId);
+        }
+        renderCart();
+    }
+
+    function renderCart() {
+        const container = document.getElementById('cart-items');
+        const totalEl = document.getElementById('cart-total');
+
+        if (cart.length === 0) {
+            container.innerHTML =
+                '<div class="cart-empty">No items yet.<br>Click products to add!</div>';
+            totalEl.textContent = '$0.00';
+            return;
+        }
+
+        let total = 0;
+        container.innerHTML = '';
+
+        cart.forEach(item => {
+            total += item.price * item.quantity;
+            const div = document.createElement('div');
+            div.className = 'cart-item';
+            div.innerHTML = `
+                <div>
+                    <div class="cart-item-name">${item.name}</div>
+                    <div class="cart-item-price">
+                        $${(item.price * item.quantity).toFixed(2)}
+                    </div>
+                </div>
+                <div class="cart-item-qty">
+                    <button class="qty-btn"
+                        onclick="changeQty(${item.productId}, -1)">−</button>
+                    <span style="color:white;font-size:14px">
+                        ${item.quantity}
+                    </span>
+                    <button class="qty-btn"
+                        onclick="changeQty(${item.productId}, 1)">+</button>
+                </div>
+            `;
+            container.appendChild(div);
+        });
+
+        totalEl.textContent = '$' + total.toFixed(2);
+    }
+
+    async function placeOrder() {
+        const customerName =
+            document.getElementById('customer-name').value.trim();
+
+        if (!customerName) {
+            showToast('⚠️ Please enter your name!');
+            return;
+        }
+        if (cart.length === 0) {
+            showToast('⚠️ Your cart is empty!');
+            return;
+        }
+
+        const items = cart.map(i => ({
+            product: { id: i.productId },
+            quantity: i.quantity,
+            price: i.price
+        }));
+
+        try {
+            const response = await fetch(
+                `${API}/api/orders/place?customerName=${encodeURIComponent(customerName)}`,
+                {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(items)
+                }
+            );
+
+            const order = await response.json();
+
+            // show success screen!
+            document.getElementById('cart-view').style.display = 'none';
+            document.getElementById('success-view').style.display = 'block';
+            document.getElementById('success-amount').textContent =
+                '$' + order.totalAmount.toFixed(2);
+
+            cart = [];
+
+        } catch(e) {
+            showToast('❌ Failed to place order. Try again!');
+        }
+    }
+
+    function resetOrder() {
+        document.getElementById('cart-view').style.display = 'block';
+        document.getElementById('success-view').style.display = 'none';
+        document.getElementById('customer-name').value = '';
+        renderCart();
+    }
+
+    // ── INIT ──
+    loadData();
+</script>
+</body>
+</html>
