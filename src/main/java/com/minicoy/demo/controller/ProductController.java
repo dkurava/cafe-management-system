@@ -1,5 +1,6 @@
 package com.minicoy.demo.controller;
 
+import com.minicoy.demo.exception.ResourceNotFoundException;
 import com.minicoy.demo.model.Product;
 import com.minicoy.demo.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +27,11 @@ public class ProductController {
     @GetMapping("/{id}")
     public Product getProductById(@PathVariable Long id) {
         return productRepository.findById(id)
-                .orElse(null);
+                .orElseThrow(() ->
+                        ResourceNotFoundException.product(id));
+        //↑ if not found → throws exception
+        //        //    GlobalExceptionHandler catches it
+        //        //    returns clean 404 JSON!
     }
 
     // CREATE new product
@@ -34,8 +39,14 @@ public class ProductController {
     // Body: {"name":"Latte","price":4.50,"description":"...","category":{"id":1}}
     @PostMapping
     public Product addProduct(@RequestBody Product product) {
+        //validate price
+        if (product.getPrice() == null || product.getPrice() <= 0) {
+            throw new IllegalArgumentException(
+                    "Price must be greater than 0!");
+        }
         return productRepository.save(product);
     }
+
 
     // UPDATE product price
     // PUT http://localhost:8081/api/products/1
@@ -43,6 +54,11 @@ public class ProductController {
     @PutMapping("/{id}")
     public Product updateProduct(@PathVariable Long id,
                                  @RequestBody Product product) {
+        // check if product exists first!
+        productRepository.findById(id)
+                .orElseThrow(() ->
+                        ResourceNotFoundException.product(id));
+
         product.setId(id); // make sure correct id!
         return productRepository.save(product);
     }
@@ -52,6 +68,11 @@ public class ProductController {
     // DELETE http://localhost:8081/api/products/1
     @DeleteMapping("/{id}")
     public String deleteProduct(@PathVariable Long id) {
+        // check if product exists first!
+        productRepository.findById(id)
+                .orElseThrow(() ->
+                        ResourceNotFoundException.product(id));
+
         productRepository.deleteById(id);
         return "Product deleted successfully!";
     }

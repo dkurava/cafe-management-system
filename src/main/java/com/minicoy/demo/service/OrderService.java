@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class OrderService {
@@ -47,21 +48,36 @@ public class OrderService {
         return orderRepository.findAll();
     }
 
-    // Get order by id
-    public Order getOrderById(Long id) {
-        return orderRepository.findById(id)
-                .orElse(null);
+    // Get by id — returns Optional!
+    public Optional<Order> getOrderById(Long id) {
+        return orderRepository.findById(id);
     }
 
+    // Get order by id
+    //public Order getOrderById(Long id) {
+    //    return orderRepository.findById(id)
+    //            .orElse(null);
+    //}
+
     // Update order customer name
-    public Order updateOrder(Long id, String customerName) {
-        Order order = orderRepository.findById(id)
-                .orElse(null);
-        if (order != null) {
-            order.setCustomerName(customerName);
-            return orderRepository.save(order);
-        }
-        return null;
+    //public Order updateOrder(Long id, String customerName) {
+    //    Order order = orderRepository.findById(id)
+    //            .orElse(null);
+    //    if (order != null) {
+    //        order.setCustomerName(customerName);
+    //        return orderRepository.save(order);
+    //    }
+    //    return null;
+    //}
+
+    // Update — returns Optional!
+    public Optional<Order> updateOrder(Long id,
+                                       String customerName) {
+        return orderRepository.findById(id)
+                .map(order -> {
+                    order.setCustomerName(customerName);
+                    return orderRepository.save(order);
+                });
     }
 
     // Delete order

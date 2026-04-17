@@ -1,5 +1,6 @@
 package com.minicoy.demo.controller;
 
+import com.minicoy.demo.exception.ResourceNotFoundException;
 import com.minicoy.demo.model.Order;
 import com.minicoy.demo.model.OrderItem;
 import com.minicoy.demo.service.OrderService;
@@ -26,7 +27,9 @@ public class OrderController {
     // http://localhost:8081/api/orders/1
     @GetMapping("/{id}")
     public Order getOrderById(@PathVariable Long id) {
-        return orderService.getOrderById(id);
+        return orderService.getOrderById(id)
+                .orElseThrow(() ->
+                        ResourceNotFoundException.order(id));
     }
 
     // PLACE new order
@@ -36,6 +39,17 @@ public class OrderController {
     public Order placeOrder(
             @RequestParam String customerName,
             @RequestBody List<OrderItem> items) {
+
+        if (customerName == null || customerName.trim().isEmpty()) {
+            throw new IllegalArgumentException(
+                    "Customer name cannot be empty!");
+        }
+
+        if (items == null || items.isEmpty()) {
+            throw new IllegalArgumentException(
+                    "Order must have at least one item!");
+        }
+
         return orderService.placeOrder(customerName, items);
     }
 
@@ -45,13 +59,19 @@ public class OrderController {
     public Order updateOrder(
             @PathVariable Long id,
             @RequestParam String customerName) {
-        return orderService.updateOrder(id, customerName);
+        return orderService.updateOrder(id, customerName)
+                .orElseThrow(() ->
+                        ResourceNotFoundException.order(id));
     }
 
     // DELETE order
     // DELETE http://localhost:8081/api/orders/1
     @DeleteMapping("/{id}")
     public String deleteOrder(@PathVariable Long id) {
+        orderService.getOrderById(id)
+                .orElseThrow(() ->
+                        ResourceNotFoundException.order(id));
+
         orderService.deleteOrder(id);
         return "Order deleted successfully!";
     }
