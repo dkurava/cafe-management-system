@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>☕ Minicoy Cafe</title>
+    <title>☕ Minicoy Cafe — Admin</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -12,18 +12,86 @@
             --caramel: #C8860A;
             --latte: #D4A96A;
             --foam: #FBF7F0;
-            --dark: #1A0F0A;
-            --success: #4A7C59;
-            --error: #C0392B;
         }
-
         * { margin: 0; padding: 0; box-sizing: border-box; }
-
         body {
             font-family: 'DM Sans', sans-serif;
             background: var(--cream);
             color: var(--espresso);
             min-height: 100vh;
+        }
+
+        /* ── LOGIN SCREEN ── */
+        .login-screen {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--espresso);
+        }
+
+        .login-box {
+            background: var(--foam);
+            border-radius: 20px;
+            padding: 48px;
+            width: 400px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            text-align: center;
+        }
+
+        .login-logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 32px;
+            color: var(--espresso);
+            margin-bottom: 8px;
+        }
+
+        .login-logo span { color: var(--caramel); }
+
+        .login-subtitle {
+            color: #999;
+            font-size: 13px;
+            margin-bottom: 32px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .login-input {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid rgba(200,134,10,0.3);
+            border-radius: 10px;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 14px;
+            margin-bottom: 16px;
+            outline: none;
+            background: white;
+            transition: border-color 0.3s;
+        }
+
+        .login-input:focus { border-color: var(--caramel); }
+
+        .login-btn {
+            width: 100%;
+            background: var(--espresso);
+            color: var(--latte);
+            border: none;
+            padding: 16px;
+            border-radius: 10px;
+            font-family: 'Playfair Display', serif;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 8px;
+        }
+
+        .login-btn:hover { background: var(--caramel); color: white; }
+
+        .login-error {
+            color: #C0392B;
+            font-size: 13px;
+            margin-top: 12px;
+            display: none;
         }
 
         /* ── HEADER ── */
@@ -48,6 +116,30 @@
 
         .logo span { color: var(--caramel); }
 
+        .header-right { display: flex; align-items: center; gap: 16px; }
+
+        .admin-badge {
+            background: var(--caramel);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 50px;
+            font-size: 12px;
+            letter-spacing: 1px;
+        }
+
+        .logout-btn {
+            background: transparent;
+            border: 1px solid rgba(212,169,106,0.3);
+            color: var(--latte);
+            padding: 8px 16px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 13px;
+            transition: all 0.3s;
+        }
+
+        .logout-btn:hover { background: #C0392B; border-color: #C0392B; color: white; }
+
         nav { display: flex; gap: 8px; }
 
         nav button {
@@ -62,8 +154,7 @@
             transition: all 0.3s;
         }
 
-        nav button:hover,
-        nav button.active {
+        nav button:hover, nav button.active {
             background: var(--caramel);
             border-color: var(--caramel);
             color: white;
@@ -78,28 +169,10 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        .page-title {
-            font-family: 'Playfair Display', serif;
-            font-size: 36px;
-            color: var(--espresso);
-            margin-bottom: 8px;
-        }
+        .page-title { font-family: 'Playfair Display', serif; font-size: 36px; margin-bottom: 8px; }
+        .page-subtitle { color: var(--caramel); font-size: 14px; margin-bottom: 32px; letter-spacing: 2px; text-transform: uppercase; }
 
-        .page-subtitle {
-            color: var(--caramel);
-            font-size: 14px;
-            margin-bottom: 32px;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-        }
-
-        /* ── MENU PAGE ── */
-        .category-filter {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 30px;
-            flex-wrap: wrap;
-        }
+        .category-filter { display: flex; gap: 10px; margin-bottom: 30px; flex-wrap: wrap; }
 
         .filter-btn {
             background: white;
@@ -108,23 +181,17 @@
             padding: 8px 20px;
             border-radius: 50px;
             cursor: pointer;
-            font-family: 'DM Sans', sans-serif;
             font-size: 14px;
             transition: all 0.3s;
         }
 
-        .filter-btn:hover,
-        .filter-btn.active {
+        .filter-btn:hover, .filter-btn.active {
             background: var(--espresso);
             border-color: var(--espresso);
             color: var(--latte);
         }
 
-        .products-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-            gap: 24px;
-        }
+        .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 24px; }
 
         .product-card {
             background: white;
@@ -145,57 +212,8 @@
             background: linear-gradient(90deg, var(--caramel), var(--latte));
         }
 
-        .product-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 8px 30px rgba(44,24,16,0.15);
-        }
-
-        .product-emoji {
-            font-size: 40px;
-            margin-bottom: 12px;
-            display: block;
-        }
-
-        .product-name {
-            font-family: 'Playfair Display', serif;
-            font-size: 18px;
-            margin-bottom: 6px;
-        }
-
-        .product-desc {
-            font-size: 13px;
-            color: #888;
-            margin-bottom: 16px;
-            line-height: 1.5;
-        }
-
-        .product-footer {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .product-price {
-            font-size: 22px;
-            font-weight: 700;
-            color: var(--caramel);
-        }
-
-        .add-to-order-btn {
-            background: var(--espresso);
-            color: var(--latte);
-            border: none;
-            padding: 8px 16px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 13px;
-            transition: all 0.3s;
-        }
-
-        .add-to-order-btn:hover {
-            background: var(--caramel);
-            color: white;
-        }
+        .product-card:hover { transform: translateY(-4px); box-shadow: 0 8px 30px rgba(44,24,16,0.15); }
+        .product-emoji { font-size: 40px; margin-bottom: 12px; display: block; }
 
         .category-badge {
             display: inline-block;
@@ -210,27 +228,26 @@
             letter-spacing: 1px;
         }
 
-        /* ── ORDER PAGE ── */
-        .order-layout {
-            display: grid;
-            grid-template-columns: 1fr 380px;
-            gap: 32px;
-            align-items: start;
+        .product-name { font-family: 'Playfair Display', serif; font-size: 18px; margin-bottom: 6px; }
+        .product-desc { font-size: 13px; color: #888; margin-bottom: 16px; line-height: 1.5; }
+        .product-footer { display: flex; align-items: center; justify-content: space-between; }
+        .product-price { font-size: 22px; font-weight: 700; color: var(--caramel); }
+
+        .add-to-order-btn {
+            background: var(--espresso);
+            color: var(--latte);
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 13px;
+            transition: all 0.3s;
         }
 
-        .section-title {
-            font-family: 'Playfair Display', serif;
-            font-size: 22px;
-            margin-bottom: 20px;
-            padding-bottom: 10px;
-            border-bottom: 2px solid var(--latte);
-        }
+        .add-to-order-btn:hover { background: var(--caramel); color: white; }
 
-        .order-products-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 16px;
-        }
+        .order-layout { display: grid; grid-template-columns: 1fr 380px; gap: 32px; align-items: start; }
+        .order-products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; }
 
         .order-product-card {
             background: white;
@@ -242,23 +259,10 @@
             box-shadow: 0 2px 8px rgba(44,24,16,0.06);
         }
 
-        .order-product-card:hover {
-            border-color: var(--caramel);
-            transform: translateY(-2px);
-        }
+        .order-product-card:hover { border-color: var(--caramel); transform: translateY(-2px); }
+        .order-product-card .name { font-weight: 600; font-size: 14px; margin-bottom: 4px; }
+        .order-product-card .price { color: var(--caramel); font-weight: 700; }
 
-        .order-product-card .name {
-            font-weight: 600;
-            font-size: 14px;
-            margin-bottom: 4px;
-        }
-
-        .order-product-card .price {
-            color: var(--caramel);
-            font-weight: 700;
-        }
-
-        /* ── CART ── */
         .cart-panel {
             background: var(--espresso);
             border-radius: 20px;
@@ -268,12 +272,7 @@
             top: 100px;
         }
 
-        .cart-title {
-            font-family: 'Playfair Display', serif;
-            font-size: 22px;
-            color: var(--latte);
-            margin-bottom: 20px;
-        }
+        .cart-title { font-family: 'Playfair Display', serif; font-size: 22px; color: var(--latte); margin-bottom: 20px; }
 
         .customer-input {
             width: 100%;
@@ -290,25 +289,12 @@
 
         .customer-input::placeholder { color: rgba(212,169,106,0.5); }
         .customer-input:focus { border-color: var(--caramel); }
-
         .cart-items { margin-bottom: 20px; min-height: 100px; }
 
-        .cart-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px 0;
-            border-bottom: 1px solid rgba(212,169,106,0.15);
-        }
-
+        .cart-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid rgba(212,169,106,0.15); }
         .cart-item-name { font-size: 14px; color: var(--foam); }
         .cart-item-price { color: var(--caramel); font-weight: 700; }
-
-        .cart-item-qty {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
+        .cart-item-qty { display: flex; align-items: center; gap: 8px; }
 
         .qty-btn {
             background: rgba(212,169,106,0.2);
@@ -325,13 +311,7 @@
         }
 
         .qty-btn:hover { background: var(--caramel); color: white; }
-
-        .cart-empty {
-            text-align: center;
-            color: rgba(212,169,106,0.4);
-            font-size: 14px;
-            padding: 20px 0;
-        }
+        .cart-empty { text-align: center; color: rgba(212,169,106,0.4); font-size: 14px; padding: 20px 0; }
 
         .cart-total {
             display: flex;
@@ -358,12 +338,8 @@
             letter-spacing: 1px;
         }
 
-        .place-order-btn:hover {
-            background: var(--latte);
-            transform: translateY(-2px);
-        }
+        .place-order-btn:hover { background: var(--latte); transform: translateY(-2px); }
 
-        /* ── ORDERS PAGE ── */
         .orders-list { display: flex; flex-direction: column; gap: 16px; }
 
         .order-card {
@@ -376,30 +352,10 @@
         }
 
         .order-card:hover { transform: translateX(4px); }
-
-        .order-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 12px;
-        }
-
-        .order-customer {
-            font-family: 'Playfair Display', serif;
-            font-size: 20px;
-        }
-
-        .order-total {
-            font-size: 24px;
-            font-weight: 700;
-            color: var(--caramel);
-        }
-
-        .order-date {
-            font-size: 13px;
-            color: #999;
-            margin-bottom: 8px;
-        }
+        .order-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+        .order-customer { font-family: 'Playfair Display', serif; font-size: 20px; }
+        .order-total { font-size: 24px; font-weight: 700; color: var(--caramel); }
+        .order-date { font-size: 13px; color: #999; margin-bottom: 8px; }
 
         .order-id {
             display: inline-block;
@@ -411,37 +367,11 @@
             border: 1px solid var(--latte);
         }
 
-        /* ── ADMIN PAGE ── */
-        .admin-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 20px;
-        }
+        .admin-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
 
-        .admin-card {
-            background: white;
-            border-radius: 16px;
-            padding: 24px;
-            box-shadow: 0 2px 12px rgba(44,24,16,0.08);
-        }
-
-        .admin-card .product-name {
-            font-family: 'Playfair Display', serif;
-            font-size: 18px;
-            margin-bottom: 4px;
-        }
-
-        .current-price {
-            color: var(--caramel);
-            font-size: 22px;
-            font-weight: 700;
-            margin-bottom: 16px;
-        }
-
-        .price-input-row {
-            display: flex;
-            gap: 10px;
-        }
+        .admin-card { background: white; border-radius: 16px; padding: 24px; box-shadow: 0 2px 12px rgba(44,24,16,0.08); }
+        .current-price { color: var(--caramel); font-size: 22px; font-weight: 700; margin-bottom: 16px; }
+        .price-input-row { display: flex; gap: 10px; }
 
         .price-input {
             flex: 1;
@@ -468,12 +398,8 @@
             white-space: nowrap;
         }
 
-        .update-btn:hover {
-            background: var(--caramel);
-            color: white;
-        }
+        .update-btn:hover { background: var(--caramel); color: white; }
 
-        /* ── TOAST ── */
         .toast {
             position: fixed;
             bottom: 30px;
@@ -491,18 +417,9 @@
             border-left: 4px solid var(--caramel);
         }
 
-        .toast.show {
-            transform: translateY(0);
-            opacity: 1;
-        }
+        .toast.show { transform: translateY(0); opacity: 1; }
 
-        /* ── LOADING ── */
-        .loading {
-            text-align: center;
-            padding: 60px;
-            color: var(--caramel);
-            font-size: 16px;
-        }
+        .loading { text-align: center; padding: 60px; color: var(--caramel); font-size: 16px; }
 
         .spinner {
             width: 40px;
@@ -516,7 +433,6 @@
 
         @keyframes spin { to { transform: rotate(360deg); } }
 
-        /* ── REFRESH BTN ── */
         .refresh-btn {
             background: var(--espresso);
             color: var(--latte);
@@ -534,124 +450,122 @@
 </head>
 <body>
 
-<!-- HEADER -->
-<header>
-    <div class="logo">☕ Minicoy <span>Cafe</span></div>
-    <nav>
-        <button class="active" onclick="showPage('menu')">Menu</button>
-        <button onclick="showPage('order')">Place Order</button>
-        <button onclick="showPage('orders')">All Orders</button>
-        <button onclick="showPage('admin')">Admin</button>
-    </nav>
-</header>
-
 <!-- TOAST -->
 <div class="toast" id="toast"></div>
 
 <!-- ══════════════════════════════════════ -->
-<!-- PAGE 1: MENU -->
+<!-- LOGIN SCREEN — shown first! -->
 <!-- ══════════════════════════════════════ -->
-<div class="page active" id="page-menu">
-    <h1 class="page-title">Our Menu</h1>
-    <p class="page-subtitle">Fresh · Handcrafted · Delicious</p>
+<div class="login-screen" id="login-screen">
+    <div class="login-box">
+        <div class="login-logo">☕ Minicoy <span>Cafe</span></div>
+        <div class="login-subtitle">Admin Portal</div>
 
-    <div class="category-filter" id="category-filter">
-        <button class="filter-btn active" onclick="filterProducts('all', this)">All</button>
-    </div>
+        <input type="text" class="login-input"
+            id="login-username" placeholder="Username">
 
-    <div id="menu-loading" class="loading">
-        <div class="spinner"></div>
-        Brewing your menu...
-    </div>
+        <input type="password" class="login-input"
+            id="login-password" placeholder="Password">
 
-    <div class="products-grid" id="products-grid"></div>
-</div>
+        <button class="login-btn" onclick="login()">
+            Login to Admin Panel
+        </button>
 
-<!-- ══════════════════════════════════════ -->
-<!-- PAGE 2: PLACE ORDER -->
-<!-- ══════════════════════════════════════ -->
-<div class="page" id="page-order">
-    <h1 class="page-title">Place Order</h1>
-    <p class="page-subtitle">Click items to add to your order</p>
-
-    <div class="order-layout">
-        <!-- Left: Products -->
-        <div>
-            <div class="category-filter" id="order-category-filter">
-                <button class="filter-btn active" onclick="filterOrderProducts('all', this)">All</button>
-            </div>
-            <div class="order-products-grid" id="order-products-grid"></div>
-        </div>
-
-        <!-- Right: Cart -->
-        <div class="cart-panel">
-            <div class="cart-title">🛒 Your Order</div>
-            <input
-                    type="text"
-                    class="customer-input"
-                    id="customer-name"
-                    placeholder="Your name...">
-
-            <div class="cart-items" id="cart-items">
-                <div class="cart-empty">No items yet.<br>Click products to add!</div>
-            </div>
-
-            <div class="cart-total">
-                <span>Total</span>
-                <span id="cart-total">$0.00</span>
-            </div>
-
-            <button class="place-order-btn" onclick="placeOrder()">
-                Place Order ☕
-            </button>
+        <div class="login-error" id="login-error">
+            ❌ Invalid username or password!
         </div>
     </div>
 </div>
 
 <!-- ══════════════════════════════════════ -->
-<!-- PAGE 3: ALL ORDERS -->
+<!-- MAIN APP — shown after login -->
 <!-- ══════════════════════════════════════ -->
-<div class="page" id="page-orders">
-    <h1 class="page-title">All Orders</h1>
-    <p class="page-subtitle">Every cup tells a story</p>
+<div id="main-app" style="display:none">
 
-    <button class="refresh-btn" onclick="loadOrders()">↻ Refresh Orders</button>
+    <header>
+        <div class="logo">☕ Minicoy <span>Cafe</span></div>
+        <nav>
+            <button class="active" onclick="showPage('menu')">Menu</button>
+            <button onclick="showPage('order')">Place Order</button>
+            <button onclick="showPage('orders')">All Orders</button>
+            <button onclick="showPage('admin')">Admin</button>
+        </nav>
+        <div class="header-right">
+            <div class="admin-badge">ADMIN ✅</div>
+            <button class="logout-btn" onclick="logout()">Logout</button>
+        </div>
+    </header>
 
-    <div id="orders-loading" class="loading" style="display:none">
-        <div class="spinner"></div>
-        Loading orders...
+    <!-- PAGE 1: MENU -->
+    <div class="page active" id="page-menu">
+        <h1 class="page-title">Our Menu</h1>
+        <p class="page-subtitle">Fresh · Handcrafted · Delicious</p>
+        <div class="category-filter" id="category-filter">
+            <button class="filter-btn active"
+                onclick="filterProducts('all', this)">All</button>
+        </div>
+        <div id="menu-loading" class="loading">
+            <div class="spinner"></div>Brewing your menu...
+        </div>
+        <div class="products-grid" id="products-grid"></div>
     </div>
 
-    <div class="orders-list" id="orders-list"></div>
-</div>
-
-<!-- ══════════════════════════════════════ -->
-<!-- PAGE 4: ADMIN -->
-<!-- ══════════════════════════════════════ -->
-<div class="page" id="page-admin">
-    <h1 class="page-title">Admin Panel</h1>
-    <p class="page-subtitle">Manage product prices</p>
-
-    <div id="admin-loading" class="loading" style="display:none">
-        <div class="spinner"></div>
-        Loading products...
+    <!-- PAGE 2: PLACE ORDER -->
+    <div class="page" id="page-order">
+        <h1 class="page-title">Place Order</h1>
+        <p class="page-subtitle">Click items to add to your order</p>
+        <div class="order-layout">
+            <div>
+                <div class="category-filter" id="order-category-filter">
+                    <button class="filter-btn active"
+                        onclick="filterOrderProducts('all', this)">All</button>
+                </div>
+                <div class="order-products-grid" id="order-products-grid"></div>
+            </div>
+            <div class="cart-panel">
+                <div class="cart-title">🛒 Your Order</div>
+                <input type="text" class="customer-input"
+                    id="customer-name" placeholder="Customer name...">
+                <div class="cart-items" id="cart-items">
+                    <div class="cart-empty">No items yet.<br>Click products to add!</div>
+                </div>
+                <div class="cart-total">
+                    <span>Total</span>
+                    <span id="cart-total">$0.00</span>
+                </div>
+                <button class="place-order-btn" onclick="placeOrder()">
+                    Place Order ☕
+                </button>
+            </div>
+        </div>
     </div>
 
-    <div class="admin-grid" id="admin-grid"></div>
+    <!-- PAGE 3: ALL ORDERS -->
+    <div class="page" id="page-orders">
+        <h1 class="page-title">All Orders</h1>
+        <p class="page-subtitle">Every cup tells a story</p>
+        <button class="refresh-btn" onclick="loadOrders()">↻ Refresh Orders</button>
+        <div class="orders-list" id="orders-list"></div>
+    </div>
+
+    <!-- PAGE 4: ADMIN -->
+    <div class="page" id="page-admin">
+        <h1 class="page-title">Admin Panel</h1>
+        <p class="page-subtitle">Manage product prices</p>
+        <div class="admin-grid" id="admin-grid"></div>
+    </div>
+
 </div>
 
-<!-- ══════════════════════════════════════ -->
-<!-- JAVASCRIPT -->
-<!-- ══════════════════════════════════════ -->
 <script>
     const API = 'http://localhost:8081';
 
-    // ── STATE ──
+    // JWT token stored here after login!
+    let token = null;
     let allProducts = [];
     let allCategories = [];
-    let cart = []; // [{product, quantity}]
+    let cart = [];
 
-    // ── EMOJI MAP ──
     const emojiMap = {
         'Hot Beverages':  '☕',
         'Cold Beverages': '🧋',
@@ -659,23 +573,8 @@
         'Desserts':       '🍰',
     };
 
-    function getEmoji(categoryName) {
-        return emojiMap[categoryName] || '🍽️';
-    }
+    function getEmoji(cat) { return emojiMap[cat] || '🍽️'; }
 
-    // ── PAGE NAVIGATION ──
-    function showPage(page) {
-        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-        document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
-        document.getElementById('page-' + page).classList.add('active');
-        event.target.classList.add('active');
-
-        if (page === 'orders') loadOrders();
-        if (page === 'admin') loadAdmin();
-        if (page === 'order') renderOrderProducts();
-    }
-
-    // ── TOAST ──
     function showToast(msg) {
         const t = document.getElementById('toast');
         t.textContent = msg;
@@ -684,7 +583,83 @@
     }
 
     // ══════════════════════════
-    // MENU PAGE
+    // LOGIN / LOGOUT
+    // ══════════════════════════
+    async function login() {
+        const username = document.getElementById('login-username').value.trim();
+        const password = document.getElementById('login-password').value.trim();
+        const errorDiv = document.getElementById('login-error');
+
+        if (!username || !password) {
+            errorDiv.style.display = 'block';
+            errorDiv.textContent = '⚠️ Please enter username and password!';
+            return;
+        }
+
+        try {
+            const response = await fetch(`${API}/auth/login`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username, password })
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                token = data.token; // save JWT token!
+
+                document.getElementById('login-screen').style.display = 'none';
+                document.getElementById('main-app').style.display = 'block';
+                errorDiv.style.display = 'none';
+
+                loadMenu();
+                showToast('✅ Welcome Admin!');
+            } else {
+                errorDiv.style.display = 'block';
+                errorDiv.textContent = '❌ Invalid username or password!';
+            }
+        } catch(e) {
+            errorDiv.style.display = 'block';
+            errorDiv.textContent = '❌ Cannot connect to server!';
+        }
+    }
+
+    function logout() {
+        token = null;
+        allProducts = [];
+        allCategories = [];
+        cart = [];
+        document.getElementById('main-app').style.display = 'none';
+        document.getElementById('login-screen').style.display = 'flex';
+        document.getElementById('login-username').value = '';
+        document.getElementById('login-password').value = '';
+        document.getElementById('login-error').style.display = 'none';
+        showToast('👋 Logged out!');
+    }
+
+    // sends JWT token with every PROTECTED request!
+    async function authFetch(url, options = {}) {
+        return fetch(url, {
+            ...options,
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + token,
+                ...options.headers
+            }
+        });
+    }
+
+    function showPage(page) {
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+        document.getElementById('page-' + page).classList.add('active');
+        event.target.classList.add('active');
+        if (page === 'orders') loadOrders();
+        if (page === 'admin') loadAdmin();
+        if (page === 'order') renderOrderProducts();
+    }
+
+    // ══════════════════════════
+    // MENU (PUBLIC - no token needed)
     // ══════════════════════════
     async function loadMenu() {
         try {
@@ -696,45 +671,41 @@
             allProducts = products;
             allCategories = categories;
 
-            // build category filter buttons
             const filterDiv = document.getElementById('category-filter');
-            categories.forEach(cat => {
-                const btn = document.createElement('button');
-                btn.className = 'filter-btn';
-                btn.textContent = getEmoji(cat.name) + ' ' + cat.name;
-                btn.onclick = function() { filterProducts(cat.id, this); };
-                filterDiv.appendChild(btn);
-            });
-
-            // build order category filter too
             const orderFilterDiv = document.getElementById('order-category-filter');
+
             categories.forEach(cat => {
-                const btn = document.createElement('button');
-                btn.className = 'filter-btn';
-                btn.textContent = getEmoji(cat.name) + ' ' + cat.name;
-                btn.onclick = function() { filterOrderProducts(cat.id, this); };
-                orderFilterDiv.appendChild(btn);
+                // menu filter
+                const btn1 = document.createElement('button');
+                btn1.className = 'filter-btn';
+                btn1.textContent = getEmoji(cat.name) + ' ' + cat.name;
+                btn1.onclick = function() { filterProducts(cat.id, this); };
+                filterDiv.appendChild(btn1);
+
+                // order filter
+                const btn2 = document.createElement('button');
+                btn2.className = 'filter-btn';
+                btn2.textContent = getEmoji(cat.name) + ' ' + cat.name;
+                btn2.onclick = function() { filterOrderProducts(cat.id, this); };
+                orderFilterDiv.appendChild(btn2);
             });
 
             document.getElementById('menu-loading').style.display = 'none';
             renderMenuProducts(allProducts);
-
         } catch(e) {
             document.getElementById('menu-loading').innerHTML =
-                '❌ Could not connect to server. Is your app running on port 8081?';
+                '❌ Could not load menu!';
         }
     }
 
     function renderMenuProducts(products) {
         const grid = document.getElementById('products-grid');
         grid.innerHTML = '';
-
         products.forEach(p => {
-            const emoji = getEmoji(p.category?.name);
             const card = document.createElement('div');
             card.className = 'product-card';
             card.innerHTML = `
-                <span class="product-emoji">${emoji}</span>
+                <span class="product-emoji">${getEmoji(p.category?.name)}</span>
                 <div class="category-badge">${p.category?.name || 'Uncategorized'}</div>
                 <div class="product-name">${p.name}</div>
                 <div class="product-desc">${p.description}</div>
@@ -744,8 +715,7 @@
                         onclick="addToCart(${p.id}, '${p.name}', ${p.price})">
                         + Add
                     </button>
-                </div>
-            `;
+                </div>`;
             grid.appendChild(card);
         });
     }
@@ -754,33 +724,27 @@
         document.querySelectorAll('#category-filter .filter-btn')
             .forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
-
-        if (categoryId === 'all') {
-            renderMenuProducts(allProducts);
-        } else {
-            renderMenuProducts(
-                allProducts.filter(p => p.category?.id === categoryId)
-            );
-        }
+        renderMenuProducts(categoryId === 'all'
+            ? allProducts
+            : allProducts.filter(p => p.category?.id === categoryId));
     }
 
     // ══════════════════════════
-    // ORDER PAGE
+    // ORDER PAGE (PUBLIC)
     // ══════════════════════════
-    function renderOrderProducts(filteredProducts = null) {
-        const products = filteredProducts || allProducts;
+    function renderOrderProducts(filtered = null) {
+        const products = filtered || allProducts;
         const grid = document.getElementById('order-products-grid');
         grid.innerHTML = '';
-
         products.forEach(p => {
-            const emoji = getEmoji(p.category?.name);
             const card = document.createElement('div');
             card.className = 'order-product-card';
             card.innerHTML = `
-                <div style="font-size:28px;margin-bottom:8px">${emoji}</div>
+                <div style="font-size:28px;margin-bottom:8px">
+                    ${getEmoji(p.category?.name)}
+                </div>
                 <div class="name">${p.name}</div>
-                <div class="price">$${p.price.toFixed(2)}</div>
-            `;
+                <div class="price">$${p.price.toFixed(2)}</div>`;
             card.onclick = () => addToCart(p.id, p.name, p.price);
             grid.appendChild(card);
         });
@@ -790,24 +754,15 @@
         document.querySelectorAll('#order-category-filter .filter-btn')
             .forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
-
-        if (categoryId === 'all') {
-            renderOrderProducts(allProducts);
-        } else {
-            renderOrderProducts(
-                allProducts.filter(p => p.category?.id === categoryId)
-            );
-        }
+        renderOrderProducts(categoryId === 'all'
+            ? allProducts
+            : allProducts.filter(p => p.category?.id === categoryId));
     }
 
-    // ── CART ──
     function addToCart(productId, name, price) {
         const existing = cart.find(i => i.productId === productId);
-        if (existing) {
-            existing.quantity++;
-        } else {
-            cart.push({ productId, name, price, quantity: 1 });
-        }
+        if (existing) { existing.quantity++; }
+        else { cart.push({ productId, name, price, quantity: 1 }); }
         renderCart();
         showToast(`✅ Added ${name} to order!`);
     }
@@ -816,25 +771,20 @@
         const item = cart.find(i => i.productId === productId);
         if (!item) return;
         item.quantity += delta;
-        if (item.quantity <= 0) {
-            cart = cart.filter(i => i.productId !== productId);
-        }
+        if (item.quantity <= 0) cart = cart.filter(i => i.productId !== productId);
         renderCart();
     }
 
     function renderCart() {
         const container = document.getElementById('cart-items');
         const totalEl = document.getElementById('cart-total');
-
         if (cart.length === 0) {
             container.innerHTML = '<div class="cart-empty">No items yet.<br>Click products to add!</div>';
             totalEl.textContent = '$0.00';
             return;
         }
-
         let total = 0;
         container.innerHTML = '';
-
         cart.forEach(item => {
             total += item.price * item.quantity;
             const div = document.createElement('div');
@@ -842,35 +792,22 @@
             div.innerHTML = `
                 <div>
                     <div class="cart-item-name">${item.name}</div>
-                    <div class="cart-item-price">
-                        $${(item.price * item.quantity).toFixed(2)}
-                    </div>
+                    <div class="cart-item-price">$${(item.price * item.quantity).toFixed(2)}</div>
                 </div>
                 <div class="cart-item-qty">
-                    <button class="qty-btn"
-                        onclick="changeQty(${item.productId}, -1)">−</button>
+                    <button class="qty-btn" onclick="changeQty(${item.productId}, -1)">−</button>
                     <span style="color:white;font-size:14px">${item.quantity}</span>
-                    <button class="qty-btn"
-                        onclick="changeQty(${item.productId}, 1)">+</button>
-                </div>
-            `;
+                    <button class="qty-btn" onclick="changeQty(${item.productId}, 1)">+</button>
+                </div>`;
             container.appendChild(div);
         });
-
         totalEl.textContent = '$' + total.toFixed(2);
     }
 
     async function placeOrder() {
         const customerName = document.getElementById('customer-name').value.trim();
-
-        if (!customerName) {
-            showToast('⚠️ Please enter your name!');
-            return;
-        }
-        if (cart.length === 0) {
-            showToast('⚠️ Your cart is empty!');
-            return;
-        }
+        if (!customerName) { showToast('⚠️ Please enter customer name!'); return; }
+        if (cart.length === 0) { showToast('⚠️ Cart is empty!'); return; }
 
         const items = cart.map(i => ({
             product: { id: i.productId },
@@ -879,41 +816,46 @@
         }));
 
         try {
+            // place order PUBLIC — no token needed!
             const response = await fetch(
-                `${API}/api/orders/place/customerName=${encodeURIComponent(customerName)}`,
+                `${API}/api/orders/place?customerName=${encodeURIComponent(customerName)}`,
                 {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(items)
                 }
             );
-
             const order = await response.json();
             cart = [];
             renderCart();
             document.getElementById('customer-name').value = '';
             showToast(`🎉 Order placed! Total: $${order.totalAmount.toFixed(2)}`);
-
         } catch(e) {
-            showToast('❌ Failed to place order. Try again!');
+            showToast('❌ Failed to place order!');
         }
     }
 
     // ══════════════════════════
-    // ORDERS PAGE
+    // ORDERS PAGE (PROTECTED - needs token!)
     // ══════════════════════════
     async function loadOrders() {
-        const loading = document.getElementById('orders-loading');
         const list = document.getElementById('orders-list');
-        loading.style.display = 'block';
-        list.innerHTML = '';
+        list.innerHTML = '<div class="loading"><div class="spinner"></div>Loading orders...</div>';
 
         try {
-            const orders = await fetch(`${API}/api/orders`).then(r => r.json());
-            loading.style.display = 'none';
+            // authFetch sends JWT token!
+            const response = await authFetch(`${API}/api/orders`);
+
+            if (response.status === 403 || response.status === 401) {
+                list.innerHTML = '<div class="loading">❌ Access denied! Please login again.</div>';
+                return;
+            }
+
+            const orders = await response.json();
+            list.innerHTML = '';
 
             if (orders.length === 0) {
-                list.innerHTML = '<div class="loading">No orders yet. Place your first order!</div>';
+                list.innerHTML = '<div class="loading">No orders yet!</div>';
                 return;
             }
 
@@ -927,29 +869,25 @@
                         <div class="order-total">$${order.totalAmount.toFixed(2)}</div>
                     </div>
                     <div class="order-date">📅 ${date}</div>
-                    <div class="order-id">Order #${order.id}</div>
-                `;
+                    <div class="order-id">Order #${order.id}</div>`;
                 list.appendChild(card);
             });
-
         } catch(e) {
-            loading.style.display = 'none';
-            list.innerHTML = '<div class="loading">❌ Could not load orders.</div>';
+            list.innerHTML = '<div class="loading">❌ Could not load orders!</div>';
         }
     }
 
     // ══════════════════════════
-    // ADMIN PAGE
+    // ADMIN PAGE (PROTECTED - needs token!)
     // ══════════════════════════
     async function loadAdmin() {
-        const loading = document.getElementById('admin-loading');
         const grid = document.getElementById('admin-grid');
-        loading.style.display = 'block';
-        grid.innerHTML = '';
+        grid.innerHTML = '<div class="loading"><div class="spinner"></div>Loading products...</div>';
 
         try {
+            // products are public
             const products = await fetch(`${API}/api/products`).then(r => r.json());
-            loading.style.display = 'none';
+            grid.innerHTML = '';
 
             products.forEach(p => {
                 const card = document.createElement('div');
@@ -963,26 +901,19 @@
                         $${p.price.toFixed(2)}
                     </div>
                     <div class="price-input-row">
-                        <input
-                            type="number"
-                            class="price-input"
+                        <input type="number" class="price-input"
                             id="price-input-${p.id}"
-                            placeholder="New price"
-                            step="0.50"
-                            min="0">
+                            placeholder="New price" step="0.50" min="0">
                         <button class="update-btn"
-                            onclick="updatePrice(${p.id}, '${p.name}',
-                                '${p.description}', ${p.category?.id})">
+                            onclick="updatePrice(${p.id},'${p.name}',
+                                '${p.description}',${p.category?.id})">
                             Update
                         </button>
-                    </div>
-                `;
+                    </div>`;
                 grid.appendChild(card);
             });
-
         } catch(e) {
-            loading.style.display = 'none';
-            grid.innerHTML = '<div class="loading">❌ Could not load products.</div>';
+            grid.innerHTML = '<div class="loading">❌ Could not load products!</div>';
         }
     }
 
@@ -996,35 +927,41 @@
         }
 
         try {
-            const response = await fetch(`${API}/api/products/${id}`, {
+            // PROTECTED — uses authFetch with token!
+            const response = await authFetch(`${API}/api/products/${id}`, {
                 method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    name: name,
-                    price: newPrice,
-                    description: description,
+                    name, price: newPrice, description,
                     category: { id: categoryId }
                 })
             });
+
+            if (response.status === 403 || response.status === 401) {
+                showToast('❌ Access denied! Please login again.');
+                return;
+            }
 
             const updated = await response.json();
             document.getElementById(`price-display-${id}`).textContent =
                 '$' + updated.price.toFixed(2);
             input.value = '';
 
-            // refresh allProducts too
             const idx = allProducts.findIndex(p => p.id === id);
             if (idx !== -1) allProducts[idx].price = updated.price;
 
-            showToast(`✅ ${name} price updated to $${updated.price.toFixed(2)}!`);
-
+            showToast(`✅ ${name} updated to $${updated.price.toFixed(2)}!`);
         } catch(e) {
             showToast('❌ Failed to update price!');
         }
     }
 
-    // ── INIT ──
-    loadMenu();
+    // Allow Enter key to submit login!
+    document.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            const loginScreen = document.getElementById('login-screen');
+            if (loginScreen.style.display !== 'none') login();
+        }
+    });
 </script>
 </body>
 </html>

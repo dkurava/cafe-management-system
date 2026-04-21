@@ -31,3 +31,6 @@ build/
 
 ### VS Code ###
 .vscode/
+
+# Vault config - contains infrastructure details
+bootstrap.properties
