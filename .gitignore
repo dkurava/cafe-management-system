@@ -34,3 +34,5 @@ build/
 
 # Vault config - contains infrastructure details
 bootstrap.properties
+
+echo "**/.DS_Store" >> .gitignore
