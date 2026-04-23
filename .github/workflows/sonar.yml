@@ -33,16 +33,15 @@ jobs:
           restore-keys: ${{ runner.os }}-m2
 
       - name: Run tests with coverage
-        run: mvn clean verify
+        run: ./mvnw clean verify
         env:
           SPRING_CLOUD_VAULT_ENABLED: false
+          SPRING_CLOUD_COMPATIBILITY_VERIFIER_ENABLED: false
 
       - name: SonarCloud Analysis
-        run: mvn sonar:sonar
-          -Dsonar.projectKey=your-github-username_cafe-management-system
-          -Dsonar.organization=your-github-username
+        run: ./mvnw sonar:sonar
+          -Dsonar.projectKey=cafe-management-system
+          -Dsonar.organization=dkurava
           -Dsonar.host.url=https://sonarcloud.io
           -Dsonar.token=${{ secrets.SONAR_TOKEN }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml
