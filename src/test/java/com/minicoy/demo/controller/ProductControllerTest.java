@@ -32,7 +32,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 // FAST! ✅
 
 @SpringBootTest           // loads full Spring context!
-@AutoConfigureMockMvc     // sets up MockMvc automatically!
+@AutoConfigureMockMvc(addFilters = false)     // sets up MockMvc automatically!
 @ActiveProfiles("test")
 class ProductControllerTest {
 
@@ -74,6 +74,18 @@ class ProductControllerTest {
         latte.setPrice(5.00);
         latte.setDescription("Espresso with milk");
         latte.setCategory(hotBeverages);
+    }
+
+    private String validProductDtoJson()
+            throws Exception {
+        return """
+            {
+                "name": "Cappuccino",
+                "price": 5.50,
+                "description": "Espresso with milk foam",
+                "categoryId": 1
+            }
+            """;
     }
 
     // ════════════════════════════════
@@ -177,16 +189,13 @@ class ProductControllerTest {
         when(productRepository.save(any(Product.class)))
                 .thenReturn(cappuccino);
 
-        // convert cappuccino to JSON string!
-        String productJson =
-                objectMapper.writeValueAsString(cappuccino);
 
         // ACT + ASSERT
         mockMvc.perform(
                         post("/api/products")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 // ↑ tells server: sending JSON!
-                                .content(productJson)
+                                .content(validProductDtoJson())
                         // ↑ JSON body!
                 )
                 .andExpect(status().isOk())
@@ -200,21 +209,21 @@ class ProductControllerTest {
     void addProduct_shouldReturn400_whenPriceInvalid()
             throws Exception {
 
-        // ARRANGE — product with negative price!
-        Product invalidProduct = new Product();
-        invalidProduct.setName("Test");
-        invalidProduct.setPrice(-5.0); // invalid! 😱
-        invalidProduct.setDescription("test");
-        invalidProduct.setCategory(hotBeverages);
-
-        String productJson =
-                objectMapper.writeValueAsString(invalidProduct);
+        // send valid categoryId but invalid price!
+        String invalidProductJson = """
+            {
+                "name": "Test",
+                "price": -5.0,
+                "description": "test",
+                "categoryId": 1
+            }
+            """;
 
         // ACT + ASSERT
         mockMvc.perform(
                         post("/api/products")
                                 .contentType(MediaType.APPLICATION_JSON)
-                                .content(productJson)
+                                .content(invalidProductJson)
                 )
                 .andExpect(status().isBadRequest()) // 400!
                 .andExpect(
@@ -248,14 +257,21 @@ class ProductControllerTest {
         when(productRepository.save(any(Product.class)))
                 .thenReturn(updatedProduct);
 
-        String productJson =
-                objectMapper.writeValueAsString(updatedProduct);
+        // use DTO with updated price!
+        String updatedDtoJson = """
+            {
+                "name": "Cappuccino",
+                "price": 6.00,
+                "description": "Espresso with milk foam",
+                "categoryId": 1
+            }
+            """;
 
         // ACT + ASSERT
         mockMvc.perform(
                         put("/api/products/1")
                                 .contentType(MediaType.APPLICATION_JSON)
-                                .content(productJson)
+                                .content(updatedDtoJson)
                 )
                 .andExpect(status().isOk())
                 .andExpect(
@@ -273,14 +289,12 @@ class ProductControllerTest {
         when(productRepository.findById(999L))
                 .thenReturn(Optional.empty());
 
-        String productJson =
-                objectMapper.writeValueAsString(cappuccino);
 
         // ACT + ASSERT
         mockMvc.perform(
                         put("/api/products/999")
                                 .contentType(MediaType.APPLICATION_JSON)
-                                .content(productJson)
+                                .content(validProductDtoJson())
                 )
                 .andExpect(status().isNotFound()) // 404!
                 .andExpect(

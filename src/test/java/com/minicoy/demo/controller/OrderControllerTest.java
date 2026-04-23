@@ -29,7 +29,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest           // loads full Spring context!
-@AutoConfigureMockMvc     // sets up MockMvc automatically!
+@AutoConfigureMockMvc(addFilters = false)     // sets up MockMvc automatically!
 @ActiveProfiles("test")
 class OrderControllerTest {
 

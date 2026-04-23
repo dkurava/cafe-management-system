@@ -1,80 +1,125 @@
 package com.minicoy.demo.controller;
 
+import com.minicoy.demo.dto.ProductDTO;
 import com.minicoy.demo.exception.ResourceNotFoundException;
+import com.minicoy.demo.model.Category;
 import com.minicoy.demo.model.Product;
 import com.minicoy.demo.repository.ProductRepository;
+import com.minicoy.demo.service.ProductService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/products")
-@CrossOrigin(origins = "*") // allows UI to call this API!
+@Tag(name = "Products",
+        description = "Product management APIs")
 public class ProductController {
 
     @Autowired
     private ProductRepository productRepository;
 
-    // GET ALL products
-    // http://localhost:8081/api/products
+    @Autowired
+    private ProductService productService;
+
+    // ════════════════════════════════
+    // GET ALL PRODUCTS
+    // ════════════════════════════════
     @GetMapping
+    @Operation(summary = "Get all products")
     public List<Product> getAllProducts() {
-        return productRepository.findAll();
+        return productService.getAllProducts();
     }
 
-    // GET ONE product by id
-    // http://localhost:8081/api/products/1
+    // ════════════════════════════════
+    // GET PRODUCT BY ID
+    // ════════════════════════════════
     @GetMapping("/{id}")
-    public Product getProductById(@PathVariable Long id) {
-        return productRepository.findById(id)
+    @Operation(summary = "Get product by ID")
+    public ResponseEntity<Product> getProductById(
+            @PathVariable Long id) {
+
+        Product product = productRepository
+                .findById(id)
                 .orElseThrow(() ->
-                        ResourceNotFoundException.product(id));
-        //↑ if not found → throws exception
-        //        //    GlobalExceptionHandler catches it
-        //        //    returns clean 404 JSON!
+                        new ResourceNotFoundException(
+                                "Product not found with id: " + id));
+
+        return ResponseEntity.ok(product);
     }
 
-    // CREATE new product
-    // POST http://localhost:8081/api/products
-    // Body: {"name":"Latte","price":4.50,"description":"...","category":{"id":1}}
+    // ════════════════════════════════
+    // ADD PRODUCT
+    // ════════════════════════════════
     @PostMapping
-    public Product addProduct(@RequestBody Product product) {
-        //validate price
-        if (product.getPrice() == null || product.getPrice() <= 0) {
-            throw new IllegalArgumentException(
-                    "Price must be greater than 0!");
-        }
-        return productRepository.save(product);
+    @Operation(summary = "Add new product")
+    public ResponseEntity<Product> addProduct(
+            @RequestBody @Valid ProductDTO dto) {
+
+        // convert DTO to Entity!
+        Product product = new Product();
+        product.setName(dto.getName());
+        product.setPrice(dto.getPrice());
+        product.setDescription(dto.getDescription());
+
+        // set category by ID!
+        Category category = new Category();
+        category.setId(dto.getCategoryId());
+        product.setCategory(category);
+
+        Product saved = productService.saveProduct(product);
+        return ResponseEntity.ok(saved);
     }
 
-
-    // UPDATE product price
-    // PUT http://localhost:8081/api/products/1
-    // Body: {"name":"Latte","price":6.00,"description":"...","category":{"id":1}}
+    // ════════════════════════════════
+    // UPDATE PRODUCT
+    // ════════════════════════════════
     @PutMapping("/{id}")
-    public Product updateProduct(@PathVariable Long id,
-                                 @RequestBody Product product) {
-        // check if product exists first!
-        productRepository.findById(id)
-                .orElseThrow(() ->
-                        ResourceNotFoundException.product(id));
+    @Operation(summary = "Update product")
+    public ResponseEntity<Product> updateProduct(
+            @PathVariable Long id,
+            @RequestBody @Valid ProductDTO dto) {
 
-        product.setId(id); // make sure correct id!
-        return productRepository.save(product);
+        Product existing = productRepository
+                .findById(id)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException(
+                                "Product not found with id: " + id));
+
+        // update fields from DTO!
+        existing.setName(dto.getName());
+        existing.setPrice(dto.getPrice());
+        existing.setDescription(dto.getDescription());
+
+        // update category!
+        Category category = new Category();
+        category.setId(dto.getCategoryId());
+        existing.setCategory(category);
+
+        Product updated = productRepository.save(existing);
+        return ResponseEntity.ok(updated);
     }
 
-
-    // DELETE product
-    // DELETE http://localhost:8081/api/products/1
+    // ════════════════════════════════
+    // DELETE PRODUCT
+    // ════════════════════════════════
     @DeleteMapping("/{id}")
-    public String deleteProduct(@PathVariable Long id) {
-        // check if product exists first!
+    @Operation(summary = "Delete product")
+    public ResponseEntity<String> deleteProduct(
+            @PathVariable Long id) {
+
         productRepository.findById(id)
                 .orElseThrow(() ->
-                        ResourceNotFoundException.product(id));
+                        new ResourceNotFoundException(
+                                "Product not found with id: " + id));
 
         productRepository.deleteById(id);
-        return "Product deleted successfully!";
+        return ResponseEntity.ok(
+                "Product deleted successfully!");
     }
-
 }
