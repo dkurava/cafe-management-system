@@ -36,4 +36,13 @@ COPY --from=build /app/target/*.jar app.jar
 EXPOSE 8081
 
 # run the app!
-ENTRYPOINT ["java", "-jar", "app.jar"]
+# pass system properties at JVM startup!
+# loads BEFORE bootstrap.properties!
+# disable vault before bootstrap loads!
+ENTRYPOINT ["java", \
+  "-Dspring.cloud.vault.enabled=false", \
+  "-Dspring.cloud.vault.config.enabled=false", \
+  "-Dspring.cloud.bootstrap.enabled=false", \
+  "-Dspring.config.import=", \
+  "-Dspring.cloud.compatibility-verifier.enabled=false", \
+  "-jar", "app.jar"]

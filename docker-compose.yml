@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
 
   # ════════════════════════════════
@@ -9,17 +7,26 @@ services:
     build: .
     container_name: cafe-app
     ports:
-      - "8081:8081"
+      - "8080:8081"
     environment:
-      # tell app to use mysql container!
-      # NOT localhost! service name!
+      # ── DATABASE ──
       - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/cafedb
       - SPRING_DATASOURCE_USERNAME=${DB_USERNAME}
       - SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD}
-      - SPRING_CLOUD_VAULT_HOST=vault
-      - SPRING_CLOUD_VAULT_PORT=8200
-      - VAULT_TOKEN=${VAULT_TOKEN}
+      # ── DISABLE VAULT ──
+      - SPRING_CLOUD_VAULT_ENABLED=false
+      - SPRING_CLOUD_VAULT_CONFIG_ENABLED=false
+      - SPRING_CLOUD_BOOTSTRAP_ENABLED=false
+      - SPRING_CONFIG_IMPORT=optional:file:./
       - SPRING_CLOUD_COMPATIBILITY_VERIFIER_ENABLED=false
+      # ── JWT ──
+      - jwt-secret=minicoy-cafe-super-secret-key-2024-very-long
+      - jwt-expiration=86400000
+      # ── DB CREDENTIALS ──
+      - db-username=${DB_USERNAME}
+      - db-password=${DB_PASSWORD}
+      # ── CREATE TABLES AUTOMATICALLY! ──
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
     depends_on:
       mysql:
         condition: service_healthy
@@ -34,21 +41,18 @@ services:
     image: mysql:8.0
     container_name: cafe-mysql
     ports:
-      - "3306:3306"
+      - "3307:3306"
     environment:
+      - SERVER_PORT=8080
       - MYSQL_ROOT_PASSWORD=${DB_PASSWORD}
       - MYSQL_DATABASE=cafedb
     volumes:
-      # named volume = data persists!
-      # even if container deleted!
       - mysql-data:/var/lib/mysql
     networks:
       - cafe-network
     healthcheck:
-      # wait until MySQL is READY!
-      # not just started!
-      test: ["CMD", "mysqladmin",
-             "ping", "-h", "localhost",
+      test: ["CMD", "mysqladmin", "ping",
+             "-h", "localhost",
              "-u", "root",
              "-p${DB_PASSWORD}"]
       interval: 10s
@@ -56,33 +60,15 @@ services:
       retries: 5
       start_period: 30s
 
-  # ════════════════════════════════
-  # HASHICORP VAULT
-  # ════════════════════════════════
-  vault:
-    image: hashicorp/vault:latest
-    container_name: cafe-vault
-    ports:
-      - "8200:8200"
-    environment:
-      - VAULT_DEV_ROOT_TOKEN_ID=${VAULT_TOKEN}
-      - VAULT_DEV_LISTEN_ADDRESS=0.0.0.0:8200
-    cap_add:
-      - IPC_LOCK
-    networks:
-      - cafe-network
-
 # ════════════════════════════════
-# NAMED VOLUMES
+# VOLUMES
 # data survives container restart!
 # ════════════════════════════════
 volumes:
   mysql-data:
 
 # ════════════════════════════════
-# CUSTOM NETWORK
-# containers talk to each other!
-# isolated from outside! ✅
+# NETWORKS
 # ════════════════════════════════
 networks:
   cafe-network:
