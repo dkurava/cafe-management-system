@@ -1,0 +1,25 @@
+# compiled files - not needed!
+target/
+
+# git files - not needed!
+.git/
+.gitignore
+
+# secrets - never in image!
+.env
+bootstrap.properties
+
+# test files - not needed in image!
+src/test/
+
+# docs - not needed!
+*.md
+README.md
+
+# IDE files - not needed!
+.idea/
+*.iml
+
+# sonar files - not needed!
+sonar-project.properties
+.github/

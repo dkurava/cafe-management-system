@@ -36,3 +36,7 @@ build/
 bootstrap.properties
 
 echo "**/.DS_Store" >> .gitignore
+
+# docker
+echo ".env" >> .gitignore
+echo "*.env" >> .gitignore
